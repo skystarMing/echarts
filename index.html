@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1"/>
+    <title>电商用户行为分析展示</title>
+    <link rel="stylesheet" href="css/app.css"/>
+    <script type="text/javascript" src="js/jquery.min.js"></script>
+    <script type="text/javascript" src="js/me.js"></script>
+    <script type="text/javascript" src="js/echarts-gl.js"></script>
+    <script type="text/javascript" src="js/echarts.min.js"></script>
+    <script type="text/javascript" src="js/echarts-liquidfill.min.js"></script>
+
+
+</head>
+<style>
+
+</style>
+<body>
+<div class="header">
+    <h1 class="header-title">电商用户行为分析</h1>
+</div>
+
+<div class="wrapper">
+    <div class="content">
+        <div class="col col-l">
+            <div class="xpanel-wrapper xpanel-wrapper-40">
+                <div class="xpanel xpanel-l-t">
+                    <div class="lefts" id="left1"></div>
+                </div>
+            </div>
+            <div class="xpanel-wrapper xpanel-wrapper-60">
+                <div class="xpanel xpanel-l-b">
+
+                    <div class="lefts2" id="left2">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col col-c">
+            <div class="xpanel-wrapper xpanel-wrapper-75">
+                <div class="xpanel no-bg" >
+                    <div class="cen" id="cent1"></div>
+                </div>
+            </div>
+			<!--
+{#            <div class="xpanel-wrapper xpanel-wrapper-24">#}
+{#                <div class="xpanel xpanel-c-b">#}
+{#                    <div class="title title-long"><p>lzy</p>#}
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
+			-->
+        </div>
+        <div class="col col-r">
+            <div class="xpanel-wrapper xpanel-wrapper-25">
+                <div class="xpanel xpanel-r-t">
+
+                    <div class="lefts" id="right1"></div>
+
+                </div>
+            </div>
+            <div class="xpanel-wrapper xpanel-wrapper-30">
+                <div class="xpanel xpanel-r-m">
+
+                    <div class="lefts" id="right2"></div>
+                </div>
+            </div>
+            <div class="xpanel-wrapper xpanel-wrapper-45">
+                <div class="xpanel xpanel-r-b">
+
+                    <div class="lefts" id="right3"></div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+
+<script>
+
+    //图的参数
+    var echart = {
+         //图一比值图
+        task:[1,2,3,4,5,6,7,8],
+        spec:[11,11,13,14,29,12,10,12],//比值
+        specis:[189,89,87,86,71,88,90,121],//反比
+        tim:[237,248,272,313,620,255,222,235],
+
+        // 题1数据
+        id_20:[1004856,1005115,1004767,4804056,1004870,1004833,1005105,1004249,1005160,1002544,5100816,1005100,1004873,1004836,1004741,1004785,1002524,1004838,1005239,1004750],
+        view1: [341.56,308.39,303.14,181.76,161.65,160.07,156.8,156.42,143.05,142.58,116.56,114.03,113.32,112.78,95.89,89.83,86.65,84.13,83.17,81.34],
+        cart1: [98.76,89.22,87.59,52.58,46.71,46.24,45.37,45.2,41.42,41.27,33.61,33.02,32.82,32.57,27.7,25.92,25,24.3,24.02,23.53],
+        purchase1: [108.1,97.54,95.87,57.6,51.23,50.63,49.67,49.56,45.19,45.09,36.94,36.15,35.86,35.65,30.31,28.39,27.39,26.62,26.35,25.85],
+
+        //题三数据
+        day: ['01-01','01-02','01-03','01-04','01-05','01-06','01-07','01-08','01-09','01-10','01-11','01-12','01-13','01-14','01-15','01-16','01-17','01-18','01-19','01-20','01-21','01-22','01-23','01-24','01-25','01-26','01-27','01-28','01-29','01-30','01-31','02-01','02-02','02-03','02-04','02-05','02-06','02-07','02-08','02-09','02-10','02-11','02-12','02-13','02-14','02-15','02-16','02-17','02-18','02-19','02-20','02-21','02-22','02-23','02-24'],
+        uv_1:[41,41,44,49,49,41,41,41,41,44,49,49,41,41,41,41,44,49,49,41,41,41,41,44,49,49,41,41,41,41,0,49,49,41,41,41,41,44,49,49,41,41,41,41,44,49,49,41,41,41,41,44,49,49,41,41,41,41,44,50,49,0],
+        pv_1:[603,603,692,1214,1212,604,602,606,604,693,1212,1213,603,605,603,604,692,1209,1215,603,605,602,602,691,1214,1214,603,605,604,603,0,1227,1227,610,610,610,610,697,1225,1227,612,609,609,609,700,1226,1225,610,611,610,610,702,1226,1228,610,610,610,612,699,1229,1224,0],
+
+        //题四数据
+        day_1: ['01-01','01-02','01-03','01-04','01-05','01-06','01-07','01-08','01-09','01-10','01-11','01-12','01-13','01-14','01-15','01-16','01-17','01-18','01-19','01-20','01-21','01-22','01-23','01-24','01-25','01-26','01-27','01-28','01-29','01-30','01-31','02-01','02-02','02-03','02-04','02-05','02-06','02-07','02-08','02-09','02-10','02-11','02-12','02-13','02-14','02-15','02-16','02-17','02-18','02-19','02-20','02-21','02-22','02-23','02-24'],
+        view_12: [361.35,361.16,414.29,713.74,712.54,361.76,360.74,362.63,361.75,414.95,712.73,713.26,361.01,362.09,361.36,361.79,414.58,711.19,714.51,361.14,361.97,360.52,360.84,413.98,713.83,713.85,360.95,362.2,361.57,361.27,0.02,721.87,721.55,365.31,365.22,365.34,365.36,417.24,720.21,721.51,366.42,364.88,364.97,365.02,418.88,721.18,720.09,365.49,365.98,365.65,365.12,419.97,720.73,722.31,365.36,365.44,365.36,366.27,418.67,722.78,719.87,0.05],
+        cart_12: [103.58,103.52,118.64,208.31,207.92,103.73,103.55,104.05,103.56,118.88,207.87,208.38,103.45,103.89,103.6,103.55,118.98,207.58,208.68,103.59,103.89,103.56,103.45,118.68,208.42,208.49,103.43,103.99,103.68,103.55,0,210.57,210.52,104.79,104.8,104.92,104.83,119.64,210.35,210.65,105.13,104.68,104.56,104.6,120.32,210.49,210.23,104.85,104.78,104.9,104.83,120.51,210.37,210.87,104.59,104.88,104.67,105.08,119.96,210.99,210.19,0.01],
+        removed_form_cart_12: [27.09,27.02,31.09,58.45,58.28,27.2,27.1,27.24,27.17,31.16,58.44,58.56,27.15,27.18,27.19,27.16,31.2,58.19,58.62,27.2,27.2,27.21,27.11,31.09,58.49,58.62,27.07,27.31,27.16,27.18,0,59.03,59.09,27.56,27.4,27.46,27.54,31.41,59.12,59.15,27.5,27.34,27.36,27.36,31.44,59.23,58.96,27.51,27.43,27.46,27.53,31.54,59.11,59.14,27.37,27.42,27.45,27.54,31.49,59.11,58.99,0.01],
+        purchase_12: [111.33,111.33,127.7,233.03,232.83,111.39,111.08,111.77,111.29,127.73,232.78,233.17,111.13,111.55,111.16,111.46,127.62,232.07,233.41,111.43,111.53,110.99,111.07,127.49,233.23,233.2,111.19,111.5,111.35,111.25,0,236.01,236.02,112.55,112.46,112.63,112.44,128.45,235.1,235.81,112.88,112.33,112.43,112.5,129.24,235.32,235.44,112.64,112.8,112.48,112.4,129.5,235.5,236.09,112.45,112.59,112.47,112.84,128.93,236.16,235.16,0],
+
+        //题五数据
+        date: ['01-01','01-02','01-03','01-04','01-05','01-06','01-07','01-08','01-09','01-10','01-11','01-12','01-13','01-14','01-15','01-16','01-17','01-18','01-19','01-20','01-21','01-22','01-23','01-24','01-25','01-26','01-27','01-28','01-29','01-30','01-31','02-01','02-02','02-03','02-04','02-05','02-06','02-07','02-08','02-09','02-10','02-11','02-12','02-13','02-14','02-15','02-16','02-17','02-18','02-19','02-20','02-21','02-22','02-23','02-24'],
+        c_keep_rate:[0.0,0.6429559083414054,0.6881655214581747,0.7675376437295613,0.7636197084117009,0.6362240140420163,0.643482711695905,0.6433564195302824,0.6446543976137857,0.6887116371274392,0.767438717067583,0.7634321134276394,0.6355996618188617,0.6434418554221618,0.6424312898489313,0.6419361511411432,0.6879912206069125,0.768094067127888,0.7648723024580202,0.6361040415971554,0.642972850545057,0.6418161973583391,0.6429094892996469,0.6888772686238044,0.767828639574351,0.76417857694214,0.6347209524389996,0.6434501150877159,0.6433301681172541,0.6434280847125087,0.0007729040515925762,0.16560509554140126,0.7673983675730538,0.6400781515460414,0.64677738294519,0.6462909464819077,0.6466417233448897,0.6903754115818206,0.7710814771528878,0.7675119795376546,0.6398599630694056,0.6468108531304284,0.6465767980256972,0.646907437591147,0.6919804771012462,0.7711379471565576,0.7676335871685104,0.6388983785772475,0.647392654197409,0.6468953956901333,0.6472982957464611,0.6911045751953842,0.7709420175900413,0.7679005296661645,0.6389073614039201,0.6468892696162415,0.6470645857261456,0.646743758135711,0.6919781988619963,0.7722447566622104,0.7675399523662346,0.0015550527079958828],
+        q_keep_rate:[0.0,0.0,0.0,0.0,0.0,0.0,0.6429534436056127,0.6434691064908297,0.6412780751361045,0.6810626033334822,0.7626427919884121,0.7701323660774707,0.6429747955849803,0.6421219981591498,0.643013148768502,0.6396036655211913,0.6801123376147983,0.763167521603759,0.7713076862420407,0.6445598510007193,0.6428275923208007,0.64221753659108,0.6398023599361385,0.680615907418774,0.7642543726127706,0.7704925700893165,0.6418482264506099,0.6431981878613359,0.6435787895082161,0.6402875882946518,0.0005078286870393994,0.18233477580707422,0.18355812238030508,0.15203861235615077,0.1519739255232989,0.15069905971545317,0.12738853503184713,0.6833306038604855,0.7669530605310422,0.7744192534727321,0.6470523429466778,0.6467054710217772,0.6467361102610867,0.6449304474463918,0.6838373373049278,0.7669084885759878,0.7741809996819417,0.6467261438420557,0.647848625595902,0.6474858023073853,0.6443524568665686,0.6851991972226493,0.766479545734795,0.7744898884333872,0.6465655215554421,0.6465936948001428,0.646387655928081,0.6438119201132253,0.6850025106500154,0.7682509009983244,0.7743332573512651,0.0012514050756598039],
+    };
+
+
+    //图形调用函数
+    drawChart1();
+    drawChart1_1();
+    drawChart2();
+    drawChart3();
+    drawChart4();
+    drawChart5();
+
+
+    //左边第一个图
+    function drawChart1() {
+        var OptL1 = {
+            color:['#0b0f34'],
+        title:{
+            text:"各表运算时间",
+            x:"center",
+            top:7,
+            textStyle:{
+                color:'#FFF5EE',
+                fontSize:16
+            },
+        },
+        series:[{
+            name:"时间1", type:"pie",
+            radius:['17%','22%'], center:[40,90],
+            labelLine:{show:false}, label:{position:'center',fontSize:20,formatter:'{b}秒'},
+            hoverAnimation:false,clockwise:false,
+            data:[ echart.specis[0] ,{name:echart.tim[0],value:echart.spec[0],itemStyle:{color:'#00ffcc'} },],
+        },
+            {
+            name:"时间2", type:"pie",
+            radius:['17%','22%'], center:[128,90],
+            labelLine:{show:false}, label:{position:'center',fontSize:20,formatter:'{b}秒'},
+            hoverAnimation:false,clockwise:false,
+            data:[ echart.specis[1] ,{name:echart.tim[1],value:echart.spec[1] ,itemStyle:{color:'#00ffcc'}},]
+        }, {
+            name:"时间3", type:"pie",
+            radius:['17%','22%'], center:[216,90],
+            labelLine:{show:false}, label:{position:'center',fontSize:20,formatter:'{b}秒'},
+            hoverAnimation:false,clockwise:false,
+            data:[ echart.specis[2] ,{name:echart.tim[2],value:echart.spec[2] ,itemStyle:{color:'#00ffcc'}},]
+        }, {
+            name:"时间4", type:"pie",
+            radius:['17%','22%'], center:[308,90],
+            labelLine:{show:false}, label:{position:'center',fontSize:20,formatter:'{b}秒'},
+            hoverAnimation:false,clockwise:false,
+            data:[ echart.specis[3] ,{name:echart.tim[3],value:echart.spec[3] ,itemStyle:{color:'#00ffcc'}},]
+        },{
+            name:"时间5", type:"pie",
+            radius:['17%','22%'], center:[40,230],
+            labelLine:{show:false}, label:{position:'center',fontSize:20,formatter:'{b}秒'},
+            hoverAnimation:false,clockwise:false,
+            data:[ echart.specis[4] ,{name:echart.tim[4],value:echart.spec[4] ,itemStyle:{color:'#00ffcc'}},]
+        },{
+            name:"时间6", type:"pie",
+            radius:['17%','22%'], center:[128,230],
+            labelLine:{show:false}, label:{position:'center',fontSize:20,formatter:'{b}秒'},
+            hoverAnimation:false,clockwise:false,
+            data:[ echart.specis[5] ,{name:echart.tim[5],value:echart.spec[5] ,itemStyle:{color:'#00ffcc'}},]
+        },{
+            name:"时间7", type:"pie",
+            radius:['17%','22%'], center:[216,230],
+            labelLine:{show:false}, label:{position:'center',fontSize:20,formatter:'{b}秒'},
+            hoverAnimation:false,clockwise:false,
+            data:[ echart.specis[6],{name:echart.tim[6],value:echart.spec[6] ,itemStyle:{color:'#00ffcc'}},]
+        },{
+            name:"时间8", type:"pie",
+            radius:['17%','22%'], center:[308,230],
+            labelLine:{show:false}, label:{position:'center',fontSize:20,formatter:'{b}秒'},
+            hoverAnimation:false,clockwise:false,
+            data:[ echart.specis[7],{name:echart.tim[7],value:echart.spec[7] ,itemStyle:{color:'#00ffcc'}},]
+        },
+
+            {name:"辅助1", type:"pie",
+            center:[40,90], radius:['22%','23%'],
+            labelLine:{show:false},
+            hoverAnimation:false,
+            itemStyle:{color:'#00ffcc'},
+            data:[{name:echart.task[0],value:1}]
+        },{name:"辅助2", type:"pie",
+            center:[128,90], radius:['22%','23%'],
+            labelLine:{show:false},
+            hoverAnimation:false,
+            itemStyle:{color:'#00ffcc'},
+            data:[{name:echart.task[1],value:1}]
+        },{name:"辅助3", type:"pie",
+            center:[216,90], radius:['22%','23%'],
+            labelLine:{show:false},
+            hoverAnimation:false,
+            itemStyle:{color:'#00ffcc'},
+           data:[{name:echart.task[2],value:1}]
+        },{name:"辅助4", type:"pie",
+            center:[308,90], radius:['22%','23%'],
+            labelLine:{show:false},
+            hoverAnimation:false,
+            itemStyle:{color:'#00ffcc'},
+           data:[{name:echart.task[3],value:1}]
+        },{name:"辅助5", type:"pie",
+            center:[40,230], radius:['22%','23%'],
+            labelLine:{show:false},
+            hoverAnimation:false,
+            itemStyle:{color:'#00ffcc'},
+            data:[{name:echart.task[4],value:1}]
+        },{name:"辅助6", type:"pie",
+            center:[128,230], radius:['22%','23%'],
+            labelLine:{show:false},
+            hoverAnimation:false,
+            itemStyle:{color:'#00ffcc'},
+            data:[{name:echart.task[5],value:1}]
+        },{name:"辅助7", type:"pie",
+            center:[216,230], radius:['22%','23%'],
+            labelLine:{show:false},
+            hoverAnimation:false,
+            itemStyle:{color:'#00ffcc'},
+            data:[{name:echart.task[6],value:1}],
+        },{name:"辅助8", type:"pie",
+            center:[308,230], radius:['22%','23%'],
+            labelLine:{show:false},
+            hoverAnimation:false,
+            itemStyle:{color:'#00ffcc'},
+            data:[{name:echart.task[7],value:1}],
+        }]
+        };
+        var left1 = echarts.init(document.getElementById("left1"));
+        left1.setOption(OptL1);
+    }
+
+    //中间的图
+   function drawChart1_1() {
+        //中间第一个图
+        var OptCen1 = {
+            // color: ['#d14a61','#ffff99','#00ff99'],
+            title:{
+                text:"top20",
+                x:'center',
+                top:35,
+                textStyle:{
+                    color:'#FFF5EE',
+                    fontSize:23
+                },
+            },
+            tooltip: {
+                trigger: 'item',
+                formatter:'商品id：{b}<br/>{a}：{c}万',
+                axisPointer: {
+                    type: 'shadow'}
+            },
+            legend:{
+                orient: 'vertical',
+                left:10,
+                top:70,
+                 textStyle: {
+                    color: '#FFF5EE',
+             },
+                data:["浏览量","加入购物车量","移除购物车量"]
+            },
+            // dataZoom: [{
+            //     type: 'inside',
+            //     start:0,
+            //     end:50,
+            // }],
+            grid:[{top:'35%',bottom:'30%',left:'5%',right:'5%'},{top:'70%',right:'5%',left:'5%',bottom:'15%'}],
+             xAxis: [{
+                type: 'category',
+                show:false,
+                data: echart.id_20,
+                 gridIndex:0
+            },{
+                type: 'category',
+                axisLine: {lineStyle: {color: '#FFF5EE',}},
+                axisLabel : {interval: 0, rotate: "35"},
+                data: echart.id_20,
+                 gridIndex:1
+             }],
+            yAxis: [{
+                name:'单位(万)',
+                type: 'value',
+                axisLine: {lineStyle: {color: '#FFF5EE',}},
+                gridIndex:0
+            },{
+                type: 'value',
+                axisLine: {lineStyle: {color: '#FFF5EE',}},
+                gridIndex:1,
+                max:200,
+                inverse: true
+            }],
+            series: [{
+                name:"加入购物车量",
+                type: "bar",
+                stack:'one',
+                data: echart.cart1,
+                barWidth: '40%',
+                 xAxisIndex: 0, yAxisIndex: 0
+            },{
+                name:"浏览量",
+                type: "bar",
+                stack:'one',
+                data: echart.view1,
+                barWidth: '40%',
+                 xAxisIndex: 0, yAxisIndex: 0
+            },{
+                name:"移除购物车量",
+                type: "bar",
+                data: echart.purchase1,
+                barWidth: '40%',
+                 xAxisIndex: 1, yAxisIndex: 1
+            },],
+        };
+        var cent1 = echarts.init(document.getElementById("cent1"));
+        cent1.setOption(OptCen1);
+    }
+
+    //右边第一个图
+    function drawChart2() {
+        var OptR1 = {
+            color:['#FFF5EE','#d14a61',],
+            title: {
+                text: "pv  uv",
+                textStyle: {
+                    color: '#FFF5EE',
+                    fontSize:23
+                },
+                x: "center",
+                top:9
+            },
+            legend:{
+                orient: 'vertical',
+                left: 10,
+                top:10,
+                data: ["页面总访问量","访问用户总数量",],
+                textStyle: {
+                    color: '#FFF5EE',
+             },
+            },
+            tooltip: {
+                trigger: 'axis',
+                formatter:'{b}<br/>{a0}:{c0}万<br/>{a1}:{c1}万',
+            },
+            xAxis: {
+                type: "category",
+                data: echart.day,
+                axisLine: {
+                    lineStyle: {
+                        color: '#FFF5EE',
+                    }
+                },
+            },
+            yAxis:[ {
+                name:'单位（万）',
+                type: "value",
+                axisLine: {
+                    lineStyle: {
+                        color: '#FFF5EE',
+                    }
+                }
+            },{
+                type: "value",
+                axisLine: {
+                    lineStyle: {
+                        color: '#d14a61',
+                    }
+                },
+                splitLine: {show: false},
+                max:140
+            },],
+            grid:{left:75,bottom:'17%',top:'35%'},
+            dataZoom: [{
+                type: 'inside',
+                filterMode:'',
+                start:0,
+                end:70,
+            }],
+            series: [ {
+                name: "页面总访问量",
+                type: "line",
+                smooth: true,
+                symbol: 'none',
+                data: echart.pv_1,
+            },{
+                name: "访问用户总数量",
+                type: "line",
+                smooth: true,
+                symbol: 'none',
+                data: echart.uv_1,
+                yAxisIndex:1,
+            },]
+        };
+        var right1 = echarts.init(document.getElementById("right1"));
+        right1.setOption(OptR1);
+
+        //console.log(echart.day)
+    }
+
+    //右边第二个图
+    function drawChart3() {
+        var OptR2 = {
+            title: {
+                text: "用户行为分析表",
+                textStyle: {
+                    color: '#FFF5EE',
+                    fontSize:16
+                },
+                x: "center",
+                top:7
+            },
+            tooltip: {
+                trigger: 'axis',
+                formatter:'{b}<br/>{a0}:{c0}万<br/>{a1}:{c1}万<br/>{a2}:{c2}万<br/>{a3}:{c3}万<br/>',
+            },
+            xAxis: {
+                type: "category",
+                data: echart.day_1,
+                axisLine: {
+                    lineStyle: {
+                        color: '#FFF5EE',
+                    }
+                }
+            },
+            yAxis: {
+                name:'单位(万)',
+                type: "value",
+                axisLine: {
+                    lineStyle: {
+                        color: '#FFF5EE',
+                    }
+                }
+            },
+            grid:{left:60,top:'28%',bottom:'10%'},
+            dataZoom: [{
+                type: 'inside',
+                start:0,
+                end:70,
+            }],
+            series: [{
+                name: "浏览次数",
+                type: "line",
+                smooth: true,
+                symbol: 'none',
+                data: echart.view_12,
+            }, {
+                name: "加入购物车次数",
+                type: "line",
+                smooth: true,
+                symbol: 'none',
+                data: echart.cart_12,
+            }, {
+                name: "用户将产品从购物车中移除总量",
+                type: "line",
+                smooth: true,
+                symbol: 'none',
+                data: echart.removed_form_cart_12,
+            }, {
+                name: "购买总量",
+                type: "line",
+                smooth: true,
+                symbol: 'none',
+                data: echart.purchase_12,
+            },]
+        };
+        var right2 = echarts.init(document.getElementById("right2"));
+        right2.setOption(OptR2);
+    }
+
+    //左边第二个图
+    function drawChart4() {
+        var OptL2 = {
+            color:['#FFF5EE','#d14a61',],
+            title: {
+                text: "次日留存率  七日留存率",
+                textStyle: {
+                    color: '#FFF5EE',
+                    fontSize:16
+                },
+                top:20,
+                right:40,
+            },
+            legend:{
+                orient: 'vertical',
+                left: 10,
+                top:50,
+                data: ["次日留存率","七日留存率",],
+                textStyle: {
+                    color: '#FFF5EE',
+             },
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            xAxis: {
+                type: "category",
+                data: echart.date,
+                axisLine: {
+                    lineStyle: {
+                        color: '#FFF5EE',
+                    }
+                },
+            },
+            yAxis: {
+                type: "value",
+                axisLine: {
+                    lineStyle: {
+                        color: '#FFF5EE',
+                    }
+                }
+            },
+            grid:{left:50,bottom:'10%',top:'40%'},
+            dataZoom: [{
+                type: 'inside',
+                filterMode:'',
+                start:0,
+                end:70,
+            }],
+            series: [ {
+                name: "次日留存率",
+                type: "line",
+                smooth: true,
+                symbol: 'none',
+                data: echart.c_keep_rate,
+            },{
+                name: "七日留存率",
+                type: "line",
+                smooth: true,
+                symbol: 'none',
+                data: echart.q_keep_rate,
+            },]
+        };
+        var left2 = echarts.init(document.getElementById("left2"));
+        left2.setOption(OptL2);
+    }
+
+    //查询图
+    function drawChart5() {
+        var value = 0.2;
+		    var data = [value, value, value, ];
+			var dom = document.getElementById("right3");
+			// dom.style.height=window.innerHeight+'px';
+			var myChart = echarts.init(dom);
+			option = null;
+			option = {
+			     backgroundColor: new echarts.graphic.RadialGradient(0.3, 0.3, 0.8, [{
+			        offset: 0,
+			        color: '#0b0f49'
+			    }, {
+			        offset: 1,
+			        color: '#0b1f59'
+			    }]),
+			     title:[ {
+			         text: "123万",
+			         textStyle: {
+			             fontSize: 27,
+			             fontFamily: 'Microsoft Yahei',
+			             fontWeight: 'normal',
+			             color: '#FFF5EE',
+			             rich: {
+			                 a: {
+			                     fontSize: 28,
+			                 }
+			             }
+			         },
+			         x:'14%',
+			         y: '35%'
+			     },{
+			         text: '323万',
+			         textStyle: {
+			             fontSize: 27,
+			             fontFamily: 'Microsoft Yahei',
+			             fontWeight: 'normal',
+			             color: '#FFF5EE',
+			             rich: {
+			                 a: {
+			                     fontSize: 28,
+			                 }
+			             }
+			         },
+			         x:'67%',
+			         y: '35%'
+			     }],
+			     graphic: [{//文字
+			         type: 'group',
+			         left: 70,
+			         bottom:'10%',
+			         children: [{
+			             type: 'text',
+			             z: 100,
+			             left: '10',
+			             top: 'middle',
+			             style: {
+			                 fill: '#FFF5EE',
+			                 text: '商品销量',
+			                 font: '15px Microsoft YaHei'
+			             }
+			         }]
+			     },{
+			         type: 'group',
+			         right: 70,
+			         bottom:'10%',
+			         children: [{
+			             type: 'text',
+			             z: 100,
+			             left: '10',
+			             top: 'middle',
+			             style: {
+			                 fill: '#FFF5EE',
+			                 text: '成交总额',
+			                 font: '15px Microsoft YaHei'
+			             }
+			         }]
+			     },],
+			     series: [{
+			         type: 'liquidFill',
+			         radius: '70%',
+			         center: ['25%', '50%'],
+			         //  shape: 'roundRect',
+			         data: data,
+			         backgroundStyle: {//图里面的颜色
+			             color: {
+			                 type: 'linear',
+			                 x: 1,
+			                 y: 0,
+			                 x2: 0.5,
+			                 y2: 1,
+			                 colorStops: [{
+			                     offset: 1,
+			                     color: 'rgba(68, 145, 253, 0)'
+			                 }, {
+			                     offset: 0.5,
+			                     color: 'rgba(68, 145, 253, .25)'
+			                 }, {
+			                     offset: 0,
+			                     color: 'rgba(68, 145, 253, 1)'
+			                 }],
+			                 globalCoord: false
+			             },
+			         },
+			         outline: {//内边线
+			             borderDistance: 0,
+			             itemStyle: {
+			                 borderWidth: 20,
+			                 borderColor: {
+			                     type: 'linear',
+			                     x: 0,
+			                     y: 0,
+			                     x2: 0,
+			                     y2: 1,
+			                     colorStops: [{
+			                         offset: 0,
+			                         color: 'rgba(69, 73, 240, 0)'
+			                     }, {
+			                         offset: 0.5,
+			                         color: 'rgba(69, 73, 240, .25)'
+			                     }, {
+			                         offset: 1,
+			                         color: 'rgba(69, 73, 240, 1)'
+			                     }],
+			                     globalCoord: false
+			                 },
+			                 shadowBlur: 10,
+			                 shadowColor: '#00ffcc',
+			             }
+			         },
+			         color: {//球里的颜色
+			             type: 'linear',
+			             x: 0,
+			             y: 0,
+			             x2: 0,
+			             y2: 1,
+			             colorStops: [{
+			                 offset: 1,
+			                 color: 'rgba(58, 71, 212, 0)'
+			             }, {
+			                 offset: 0.5,
+			                 color: 'rgba(31, 222, 225, .2)'
+			             }, {
+			                 offset: 0,
+			                 color: 'rgba(31, 222, 225, 1)'
+			             }],
+			             globalCoord: false
+			         },
+			         label: {
+			             normal: {
+			                 formatter: '',
+			             }
+			         }
+			     },
+                     {
+			         type: 'liquidFill',
+			         radius: '70%',
+			         center: ['75%', '50%'],
+			         //  shape: 'roundRect',
+			         data: data,
+			         backgroundStyle: {
+			             color: {
+			                 type: 'linear',
+			                 x: 1,
+			                 y: 0,
+			                 x2: 0.5,
+			                 y2: 1,
+			                 colorStops: [{
+			                     offset: 1,
+			                     color: 'rgba(68, 145, 253, 0)'
+			                 }, {
+			                     offset: 0.5,
+			                     color: 'rgba(68, 145, 253, .25)'
+			                 }, {
+			                     offset: 0,
+			                     color: 'rgba(68, 145, 253, 1)'
+			                 }],
+			                 globalCoord: false
+			             },
+			         },
+			         outline: {
+			             borderDistance: 0,
+			             itemStyle: {
+			                 borderWidth: 20,
+			                 borderColor: {
+			                     type: 'linear',
+			                     x: 0,
+			                     y: 0,
+			                     x2: 0,
+			                     y2: 1,
+			                     colorStops: [{
+			                         offset: 0,
+			                         color: 'rgba(69, 73, 240, 0)'
+			                     }, {
+			                         offset: 0.5,
+			                         color: 'rgba(69, 73, 240, .25)'
+			                     }, {
+			                         offset: 1,
+			                         color: 'rgba(69, 73, 240, 1)'
+			                     }],
+			                     globalCoord: false
+			                 },
+			                 shadowBlur: 10,
+			                 shadowColor: '#000',
+			             }
+			         },
+			         color: {
+			             type: 'linear',
+			             x: 0,
+			             y: 0,
+			             x2: 0,
+			             y2: 1,
+			             colorStops: [{
+			                 offset: 1,
+			                 color: 'rgba(58, 71, 212, 0)'
+			             }, {
+			                 offset: 0.5,
+			                 color: 'rgba(31, 222, 225, .2)'
+			             }, {
+			                 offset: 0,
+			                 color: 'rgba(31, 222, 225, 1)'
+			             }],
+			             globalCoord: false
+			         },
+			         label: {
+			             normal: {
+			                 formatter: '',
+			             }
+			         }
+			     }, ]
+			 };
+			if (option && typeof option === "object") {
+				myChart.setOption(option, true);
+			}
+			window.onresize = function(){
+				myChart.resize();
+			};
+
+    }
+
+
+
+
+
+
+</script>
+
+</html>
